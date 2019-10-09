@@ -96,32 +96,6 @@ judge(){
         exit 1
     fi
 }
-ntpdate_install(){
-    if [[ "${ID}" == "centos" ]];then
-        ${INS} install ntpdate -y
-    else
-        ${INS} update
-        ${INS} install ntpdate -y
-    fi
-    judge "安装 NTPdate 时间同步服务 "
-}
-time_modify(){
-
-    ntpdate_install
-
-    systemctl stop ntp &>/dev/null
-
-    echo -e "${Info} ${GreenBG} 正在进行时间同步 ${Font}"
-    ntpdate time.nist.gov
-
-    if [[ $? -eq 0 ]];then 
-        echo -e "${OK} ${GreenBG} 时间同步成功 ${Font}"
-        echo -e "${OK} ${GreenBG} 当前系统时间 `date -R`（请注意时区间时间换算，换算后时间误差应为三分钟以内）${Font}"
-        sleep 1
-    else
-        echo -e "${Error} ${RedBG} 时间同步失败，请检查ntpdate服务是否正常工作 ${Font}"
-    fi 
-}
 dependency_install(){
     ${INS} install wget git lsof -y
 
